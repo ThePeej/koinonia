@@ -16,6 +16,7 @@ variables:
   MIX_ENV: "test"
 
 before_script:
+  - phantomjs --wd
   - apt-get update && apt-get -y install postgresql-client
   - mix local.hex --force
   - mix local.rebar --force
