@@ -17,6 +17,9 @@ config :koinonia, KoinoniaWeb.Endpoint,
   render_errors: [view: KoinoniaWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Koinonia.PubSub, adapter: Phoenix.PubSub.PG2]
 
+# Configures Hound
+config :hound, driver: "phantomjs"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
