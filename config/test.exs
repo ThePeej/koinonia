@@ -11,8 +11,9 @@ config :logger, level: :warn
 
 # Configure your database
 config :koinonia, Koinonia.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "koinonia_test",
-  hostname: "localhost",
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("POSTGRES_USER") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+  database: System.get_env("POSTGRES_DB") || "koinonia_test",
+  hostname: System.get_env("POSTGRES_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
