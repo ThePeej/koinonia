@@ -18,7 +18,7 @@ variables:
 before_script:
   - apt-get update && apt-get -y install postgresql-client
   - mix local.hex --force
-  - mix deps.get --only test
+  - mix deps.get
   - mix ecto.create
   - mix ecto.migrate
 
