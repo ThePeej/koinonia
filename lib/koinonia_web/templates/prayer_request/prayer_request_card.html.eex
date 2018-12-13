@@ -1,0 +1,4 @@
+<div class="prayer-request">
+  <h2 class="prayer-request-title"><%= @prayer_request.title%></h2>
+  <p class="prayer-request-body"><%= @prayer_request.body%></p>
+</div>
