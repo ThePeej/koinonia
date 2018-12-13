@@ -1,4 +1,5 @@
 # Koinonia
+[![Build Status](https://travis-ci.org/ThePeej/koinonia.svg?branch=master)](https://travis-ci.org/ThePeej/koinonia)
 
 To start your Phoenix server:
 
