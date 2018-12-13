@@ -6,7 +6,7 @@ env:
   - MIX_ENV=test
 
 before_script:
-  - "phantomjs --wd"
+  - "phantomjs --wd --webdriver-logfile=/tmp/phantomjs.log > /dev/null 2>&1 &"
   - mix local.rebar --force
   - mix local.hex --force
   - mix deps.get
