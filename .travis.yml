@@ -5,7 +5,8 @@ elixir:
 env:
   - MIX_ENV=test
 
-install:
+before_script:
+  - "phantomjs --wd"
   - mix local.rebar --force
   - mix local.hex --force
   - mix deps.get
