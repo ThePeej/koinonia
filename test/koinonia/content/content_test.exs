@@ -4,6 +4,6 @@ defmodule Koinonia.ContentTest do
   alias Koinonia.{Content, Repo}
 
   test "list_public_prayers/0 returns all public prayers" do
-    # assert true
+    assert false
   end
 end
