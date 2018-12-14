@@ -4,16 +4,11 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
   hound_session()
 
-  setup do
+  test "presence of public prayer requests" do
     alias Koinonia.Content.PrayerRequest
     alias Koinonia.Repo
-
     Repo.insert(%PrayerRequest{title: "Prayer Request Title 1", body: "Prayer Request Body 1"})
     Repo.insert(%PrayerRequest{title: "Prayer Request Title 2", body: "Prayer Request Body 2"})
-    :ok
-  end
-
-  test "presence of public prayer requests" do
     navigate_to("/prayer_requests")
 
     page_title = find_element(:css, ".page-title") |> visible_text()
@@ -41,16 +36,16 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     form = find_element(:id, "prayer-request-form")
 
     form
-    |> find_within_element(:name, "prayer-request[title]")
+    |> find_within_element(:name, "prayer_request[title]")
     |> fill_field("Prayer Request Title 3")
 
     form
-    |> find_within_element(:name, "prayer-request[body]")
+    |> find_within_element(:name, "prayer_request[body]")
     |> fill_field("Prayer Request Body 3")
 
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_request"
+    assert current_path() == "/prayer_requests"
 
     message =
       find_element(:class, "alert")
@@ -61,12 +56,12 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   end
 
   test "show error messages on invalid data" do
-    navigate_to("prayer_request/new")
+    navigate_to("/prayer_requests/new")
 
     form = find_element(:id, "prayer-request-form")
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_request/new"
+    assert current_path() == "/prayer_requests/new"
 
     message =
       find_element(:class, "form-error")
