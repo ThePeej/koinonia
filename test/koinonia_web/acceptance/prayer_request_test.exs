@@ -41,11 +41,11 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     form = find_element(:id, "prayer-request-form")
 
     form
-    |> find_within_element(:title, "prayer-request[title]")
+    |> find_within_element(:name, "prayer-request[title]")
     |> fill_field("Prayer Request Title 3")
 
     form
-    |> find_within_element(:body, "prayer-request[body]")
+    |> find_within_element(:name, "prayer-request[body]")
     |> fill_field("Prayer Request Body 3")
 
     form |> find_within_element(:tag, "button") |> click
@@ -58,5 +58,20 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     assert message == "Registration successful"
     assert page_source() =~ "Prayer Request Title 3"
+  end
+
+  test "show error messages on invalid data" do
+    navigate_to("prayer_request/new")
+
+    form = find_element(:id, "prayer-request-form")
+    form |> find_within_element(:tag, "button") |> click
+
+    assert current_path() == "/prayer_request/new"
+
+    message =
+      find_element(:class, "form-error")
+      |> visible_text()
+
+    assert message == "Oops, something went wrong! Please check the errors below."
   end
 end
