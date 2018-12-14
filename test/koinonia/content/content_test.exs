@@ -14,6 +14,17 @@ defmodule Koinonia.ContentTest do
     assert changeset.params == attrs
   end
 
+  test "create_prayer_request/1 returns a prayer_request for valid data" do
+    valid_attrs = %{"title" => "PR Title", "body" => "PR Body"}
+
+    assert {:ok, prayer_request} = Content.create_prayer_request(valid_attrs)
+  end
+
+  test "create_prayer_request/1 returns a changeset for invalid data" do
+    invalid_attrs = %{}
+    assert {:error, %Ecto.Changeset{}} = Content.create_prayer_request(invalid_attrs)
+  end
+
   test "list_prayer_requests/0 returns all public prayers" do
     Repo.insert(%PrayerRequest{title: "Prayer Request 1 Title", body: "Prayer Request 1 Body"})
     Repo.insert(%PrayerRequest{title: "Prayer Request 2 Title", body: "Prayer Request 2 Body"})
