@@ -8,8 +8,8 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     alias Koinonia.Content.PrayerRequest
     alias Koinonia.Repo
 
-    Repo.insert(%PrayerRequest{title: "Prayer Request 1 Title", body: "Prayer Request 1 Body"})
-    Repo.insert(%PrayerRequest{title: "Prayer Request 2 Title", body: "Prayer Request 2 Body"})
+    Repo.insert(%PrayerRequest{title: "Prayer Request Title 1", body: "Prayer Request Body 1"})
+    Repo.insert(%PrayerRequest{title: "Prayer Request Title 2", body: "Prayer Request Body 2"})
     :ok
   end
 
@@ -19,19 +19,44 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     page_title = find_element(:css, ".page-title") |> visible_text()
     assert page_title == "Prayer Requests"
 
-    pr = find_element(:css, ".prayer-request")
+    [pr1, pr2] = find_all_elements(:css, ".prayer-request")
 
     pr_title =
-      pr
+      pr1
       |> find_within_element(:css, ".prayer-request-title")
       |> visible_text()
 
     pr_body =
-      pr
+      pr2
       |> find_within_element(:css, ".prayer-request-body")
       |> visible_text()
 
-    assert pr_title == "Prayer Request 1 Title"
-    assert pr_body == "Prayer Request 1 Body"
+    assert pr_title == "Prayer Request Title 1"
+    assert pr_body == "Prayer Request Body 2"
+  end
+
+  test "submit new prayer request" do
+    navigate_to("/prayer_requests/new")
+
+    form = find_element(:id, "prayer-request-form")
+
+    form
+    |> find_within_element(:title, "prayer-request[title]")
+    |> fill_field("Prayer Request Title 3")
+
+    form
+    |> find_within_element(:body, "prayer-request[body]")
+    |> fill_field("Prayer Request Body 3")
+
+    form |> find_within_element(:tag, "button") |> click
+
+    assert current_path() == "/prayer_request"
+
+    message =
+      find_element(:class, "alert")
+      |> visible_text()
+
+    assert message == "Registration successful"
+    assert page_source() =~ "Prayer Request Title 3"
   end
 end
