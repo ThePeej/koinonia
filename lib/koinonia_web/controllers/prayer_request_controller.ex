@@ -11,4 +11,17 @@ defmodule KoinoniaWeb.PrayerRequestController do
     changeset = Content.build_prayer_request()
     render(conn, "new.html", changeset: changeset)
   end
+
+  def create(conn, %{"prayer_request" => prayer_request_params}) do
+    case Content.create_prayer_request(prayer_request_params) do
+      {:ok, _prayer_request} ->
+        conn
+        |> put_flash(:info, "Prayer request shared successfully")
+        |> redirect(to: Routes.prayer_request_path(conn, :index))
+
+      {:error, changeset} ->
+        conn
+        |> render(:new, changeset: changeset)
+    end
+  end
 end

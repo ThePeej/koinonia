@@ -12,4 +12,10 @@ defmodule Koinonia.Content do
     %PrayerRequest{}
     |> PrayerRequest.changeset(attrs)
   end
+
+  def create_prayer_request(attrs) do
+    attrs
+    |> build_prayer_request
+    |> Repo.insert()
+  end
 end

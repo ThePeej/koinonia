@@ -51,7 +51,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
       find_element(:class, "alert")
       |> visible_text()
 
-    assert message == "Registration successful"
+    assert message == "Prayer request shared successfully"
     assert page_source() =~ "Prayer Request Title 3"
   end
 
@@ -61,10 +61,10 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     form = find_element(:id, "prayer-request-form")
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_requests/new"
+    assert find_element(:id, "prayer-request-form")
 
     message =
-      find_element(:class, "form-error")
+      find_element(:id, "form-error")
       |> visible_text()
 
     assert message == "Oops, something went wrong! Please check the errors below."
