@@ -7,4 +7,9 @@ defmodule Koinonia.Content do
     PrayerRequest
     |> Repo.all()
   end
+
+  def build_prayer_request(attrs \\ %{}) do
+    %PrayerRequest{}
+    |> PrayerRequest.changeset(attrs)
+  end
 end
