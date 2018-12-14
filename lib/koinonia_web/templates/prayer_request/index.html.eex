@@ -1,0 +1,8 @@
+<h1 class="page-title">Prayer Requests</h1>
+<div class="row">
+  <%= for prayer_request <- @prayer_requests do %>
+    <div>
+      <%= render KoinoniaWeb.PrayerRequestView, "prayer_request_card.html", conn: @conn, prayer_request: prayer_request %>
+    </div>
+  <% end %>
+</div>

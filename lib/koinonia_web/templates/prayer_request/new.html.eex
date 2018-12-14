@@ -1,0 +1,21 @@
+<h1>New Prayer Request</h1>
+<%= form_for @changeset, Routes.prayer_request_path(@conn, :create), [as: :prayer_request, id: "prayer-request-form"], fn f -> %>
+  <%= if @changeset.action do %>
+    <div id="form-error" class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= label f, :title, class: "control-label" %>
+    <%= text_input f, :title, class: "form-control" %>
+    <%= error_tag f, :title %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :body, class: "control-label" %>
+    <%= textarea f, :body, class: "form-control" %>
+    <%= error_tag f, :body%>
+  </div>
+
+  <%= submit "Share Prayer Request", class: "btn btn-primary" %>
+<% end %>
