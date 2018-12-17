@@ -46,7 +46,7 @@ defmodule Koinonia.MixProject do
       {:hound, "~> 1.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:comeonin, "~> 4.0"},
-      {:bcrypt_elixir, "~> 1.1"}
+      {:bcrypt_elixir, "~> 0.12.0"}
     ]
   end
 
