@@ -18,12 +18,12 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     pr_title =
       pr1
-      |> find_within_element(:css, ".prayer-request-title")
+      |> find_within_element(:css, ".title")
       |> visible_text()
 
     pr_body =
       pr2
-      |> find_within_element(:css, ".prayer-request-body")
+      |> find_within_element(:css, ".subtitle")
       |> visible_text()
 
     assert pr_title == "Prayer Request Title 1"

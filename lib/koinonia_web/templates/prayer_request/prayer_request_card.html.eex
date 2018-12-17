@@ -1,4 +1,6 @@
-<div class="prayer-request">
-  <h2 class="prayer-request-title"><%= @prayer_request.title%></h2>
-  <p class="prayer-request-body"><%= @prayer_request.body%></p>
+<div class="prayer-request card">
+  <div class="card-content">
+    <p class="title"><%= @prayer_request.title%></p>
+    <p class="subtitle"><%= @prayer_request.body%></p>
+  </div>
 </div>
