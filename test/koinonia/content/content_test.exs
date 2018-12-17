@@ -8,7 +8,7 @@ defmodule Koinonia.ContentTest do
     assert %Ecto.Changeset{data: %PrayerRequest{}} = Content.build_prayer_request()
   end
 
-  test "build_prayer_request/1 returns a prayer_request with values applied do" do
+  test "build_prayer_request/1 returns a prayer_request with values applied" do
     attrs = %{"title" => "PR Title", "body" => "PR Body"}
     changeset = Content.build_prayer_request(attrs)
     assert changeset.params == attrs

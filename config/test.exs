@@ -17,3 +17,6 @@ config :koinonia, Koinonia.Repo,
   database: System.get_env("POSTGRES_DB") || "koinonia_test",
   hostname: System.get_env("POSTGRES_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Configure Bcrypt for faster testing
+config :bcrypt_elixir, :log_rounds, 4
