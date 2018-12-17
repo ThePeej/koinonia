@@ -1,7 +1,7 @@
 defmodule Koinonia.UserTest do
   use Koinonia.DataCase
 
-  alias Koinonia.{Account, Repo}
+  alias Koinonia.Account
   alias Koinonia.Account.User
 
   test "build_user/0 returns a user changeset" do
@@ -15,7 +15,11 @@ defmodule Koinonia.UserTest do
   end
 
   test "create_user/1 returns a user for valid data" do
-    valid_attrs = %{"username" => "CharlieBrown", "password" => "Snoopy"}
+    valid_attrs = %{
+      "username" => "CharlieBrown",
+      "email" => "PigPen@Peanuts.com",
+      "password" => "Snoopy"
+    }
 
     assert {:ok, user} = Account.create_user(valid_attrs)
 

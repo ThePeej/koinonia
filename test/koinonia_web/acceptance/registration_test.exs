@@ -14,6 +14,10 @@ defmodule KoinoniaWeb.Acceptance.RegistrationTest do
     |> fill_field("BuddyHolly")
 
     form
+    |> find_within_element(:name, "registration[email]")
+    |> fill_field("sweater@weezer.com")
+
+    form
     |> find_within_element(:name, "registration[password]")
     |> fill_field("MaryTylerMoore")
 
@@ -21,7 +25,7 @@ defmodule KoinoniaWeb.Acceptance.RegistrationTest do
     |> find_within_element(:tag, "button")
     |> click
 
-    assert current_path() == "/"
+    assert current_path() == "/prayer_requests"
 
     message = find_element(:class, "alert") |> visible_text()
 
@@ -39,7 +43,7 @@ defmodule KoinoniaWeb.Acceptance.RegistrationTest do
 
     assert current_path() == "/register"
 
-    message = find_element(:class, "form-error") |> visible_text()
+    message = find_element(:id, "form-error") |> visible_text()
 
     assert message == "Oops, something went wrong! Please check the errors below."
   end
