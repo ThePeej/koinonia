@@ -13,13 +13,19 @@ defmodule KoinoniaWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :frontend do
+    plug KoinoniaWeb.Plugs.LoadUser
+  end
+
   scope "/", KoinoniaWeb do
-    pipe_through :browser
+    pipe_through [:browser, :frontend]
 
     get "/", PageController, :index
     resources "/prayer_requests", PrayerRequestController
     get "/register", RegistrationController, :new
     post "/register", RegistrationController, :create
+    get "/login", SessionController, :new
+    post "/login", SessionController, :create
   end
 
   # Other scopes may use custom stacks.

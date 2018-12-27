@@ -39,7 +39,7 @@ defmodule Koinonia.UserTest do
     }
 
     {:ok, user1} = Account.create_user(valid_attrs)
-    user2 = Account.get_user_by_username("sweater@weezer.com")
+    user2 = Account.get_user_by_username("BuddyHolly")
     assert user1.id == user2.id
   end
 end
