@@ -69,4 +69,16 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     assert message == "Oops, something went wrong! Please check the errors below."
   end
+
+  test "cannot submit new prayer request if not logged in" do
+    navigate_to("/prayer_requests/new")
+
+    assert current_path() == "/login"
+
+    message =
+      find_element(:class, "alert-danger")
+      |> visible_text()
+
+    assert message == "You must be signed in."
+  end
 end

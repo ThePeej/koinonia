@@ -30,4 +30,16 @@ defmodule Koinonia.UserTest do
     invalid_attrs = %{}
     assert {:error, %Ecto.Changeset{}} = Account.create_user(invalid_attrs)
   end
+
+  test "get_user_by_username" do
+    valid_attrs = %{
+      "username" => "BuddyHolly",
+      "email" => "sweater@weezer.com",
+      "password" => "MaryTylerMoore"
+    }
+
+    {:ok, user1} = Account.create_user(valid_attrs)
+    user2 = Account.get_user_by_username("sweater@weezer.com")
+    assert user1.id == user2.id
+  end
 end
