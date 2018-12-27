@@ -28,7 +28,7 @@ defmodule KoinoniaWeb.SessionController do
   def delete(conn, _) do
     conn
     |> clear_session()
-    |> put_flash(:info, "You have been logged out")
+    |> put_flash(:info, "You have been logged out.")
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end

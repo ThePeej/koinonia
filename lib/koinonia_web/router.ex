@@ -21,11 +21,18 @@ defmodule KoinoniaWeb.Router do
     pipe_through [:browser, :frontend]
 
     get "/", PageController, :index
-    resources "/prayer_requests", PrayerRequestController
+    resources "/prayer_requests", PrayerRequestController, only: [:index]
     get "/register", RegistrationController, :new
     post "/register", RegistrationController, :create
     get "/login", SessionController, :new
     post "/login", SessionController, :create
+  end
+
+  scope "/", KoinoniaWeb do
+    pipe_through [:browser, :frontend, KoinoniaWeb.Plugs.AuthenticateUser]
+
+    get "/logout", SessionController, :delete
+    resources "/prayer_requests", PrayerRequestController, except: [:index]
   end
 
   # Other scopes may use custom stacks.

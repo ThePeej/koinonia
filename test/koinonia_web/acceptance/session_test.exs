@@ -54,4 +54,42 @@ defmodule KoinoniaWeb.Acceptance.SessionTest do
     message = find_element(:class, "alert-danger") |> visible_text()
     assert message == "Invalid username/password combination"
   end
+
+  test "logout removes current_user from session" do
+    navigate_to("/login")
+
+    form = find_element(:id, "session-form")
+
+    form
+    |> find_within_element(:name, "session[username]")
+    |> fill_field("BuddyHolly")
+
+    form
+    |> find_within_element(:name, "session[password]")
+    |> fill_field("MaryTylerMoore")
+
+    form
+    |> find_within_element(:tag, "button")
+    |> click()
+
+    navigate_to("/logout")
+
+    assert current_path() == "/"
+
+    message = find_element(:class, "alert-info") |> visible_text()
+
+    assert message == "You have been logged out."
+  end
+
+  test "cannot logout without first being logged in" do
+    navigate_to("/logout")
+
+    assert current_path() == "/login"
+
+    message =
+      find_element(:class, "alert-info")
+      |> visible_text()
+
+    assert message == "You must be signed in."
+  end
 end

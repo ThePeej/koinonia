@@ -4,6 +4,32 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
   hound_session()
 
+  def login do
+    valid_attrs = %{
+      "username" => "BuddyHolly",
+      "email" => "sweater@weezer.com",
+      "password" => "MaryTylerMoore"
+    }
+
+    Koinonia.Account.create_user(valid_attrs)
+
+    navigate_to("/login")
+
+    form = find_element(:id, "session-form")
+
+    form
+    |> find_within_element(:name, "session[username]")
+    |> fill_field("BuddyHolly")
+
+    form
+    |> find_within_element(:name, "session[password]")
+    |> fill_field("MaryTylerMoore")
+
+    form
+    |> find_within_element(:tag, "button")
+    |> click()
+  end
+
   test "presence of public prayer requests" do
     alias Koinonia.Content.PrayerRequest
     alias Koinonia.Repo
@@ -31,6 +57,8 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   end
 
   test "submit new prayer request" do
+    login()
+
     navigate_to("/prayer_requests/new")
 
     form = find_element(:id, "prayer-request-form")
@@ -56,6 +84,8 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   end
 
   test "show error messages on invalid data" do
+    login()
+
     navigate_to("/prayer_requests/new")
 
     form = find_element(:id, "prayer-request-form")
@@ -76,7 +106,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     assert current_path() == "/login"
 
     message =
-      find_element(:class, "alert-danger")
+      find_element(:class, "alert-info")
       |> visible_text()
 
     assert message == "You must be signed in."
