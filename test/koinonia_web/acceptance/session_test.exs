@@ -39,6 +39,7 @@ defmodule KoinoniaWeb.Acceptance.SessionTest do
     message = find_element(:class, "alert-info") |> visible_text()
 
     assert message == "Login successful"
+    assert page_source() =~ "BuddyHolly"
   end
 
   test "shows error message for invalid credentials" do
@@ -53,6 +54,7 @@ defmodule KoinoniaWeb.Acceptance.SessionTest do
     assert current_path() == "/login"
     message = find_element(:class, "alert-danger") |> visible_text()
     assert message == "Invalid username/password combination"
+    refute page_source() =~ "BuddyHolly"
   end
 
   test "logout removes current_user from session" do
