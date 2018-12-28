@@ -36,28 +36,28 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     Repo.insert(%PrayerRequest{
       title: "Prayer Request Title 1",
       body: "Prayer Request Body 1",
-      is_private: false,
+      is_public: false,
       user_id: user1.id
     })
 
     Repo.insert(%PrayerRequest{
       title: "Prayer Request Title 2",
       body: "Prayer Request Body 2",
-      is_private: true,
+      is_public: true,
       user_id: user1.id
     })
 
     Repo.insert(%PrayerRequest{
       title: "Prayer Request Title 3",
       body: "Prayer Request Body 3",
-      is_private: false,
+      is_public: false,
       user_id: user1.id
     })
 
     Repo.insert(%PrayerRequest{
       title: "Prayer Request Title 4",
       body: "Prayer Request Body 4",
-      is_private: true,
+      is_public: true,
       user_id: user1.id
     })
 
@@ -66,23 +66,23 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     page_title = find_element(:css, ".page-title") |> visible_text()
     assert page_title == "Prayer Requests"
 
-    [pr1, pr3] = find_all_elements(:css, ".prayer-request")
+    [pr2, pr4] = find_all_elements(:css, ".prayer-request")
 
-    pr1_title =
-      pr1
+    pr2_title =
+      pr2
       |> find_within_element(:css, ".title")
       |> visible_text()
 
-    pr3_body =
-      pr3
+    pr4_body =
+      pr4
       |> find_within_element(:css, ".subtitle")
       |> visible_text()
 
-    assert pr1_title == "Prayer Request Title 1"
-    assert pr3_body == "Prayer Request Body 3"
+    assert pr2_title == "Prayer Request Title 2"
+    assert pr4_body == "Prayer Request Body 4"
   end
 
-  test "submit new prayer request" do
+  test "submit public new prayer request" do
     Koinonia.Account.create_user(@valid_attrs)
     login()
 
@@ -98,6 +98,10 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     |> find_within_element(:name, "prayer_request[body]")
     |> fill_field("Prayer Request Body 3")
 
+    form
+    |> find_within_element(:id, "prayer_request_is_public")
+    |> click
+
     form |> find_within_element(:tag, "button") |> click
 
     assert current_path() == "/prayer_requests"
@@ -108,6 +112,34 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     assert message == "Prayer request shared successfully"
     assert page_source() =~ "Prayer Request Title 3"
+  end
+
+  test "non-public prayer request does not show up on index" do
+    Koinonia.Account.create_user(@valid_attrs)
+    login()
+
+    navigate_to("/prayer_requests/new")
+
+    form = find_element(:id, "prayer-request-form")
+
+    form
+    |> find_within_element(:name, "prayer_request[title]")
+    |> fill_field("Prayer Request Title 4")
+
+    form
+    |> find_within_element(:name, "prayer_request[body]")
+    |> fill_field("Prayer Request Body 4")
+
+    form |> find_within_element(:tag, "button") |> click
+
+    assert current_path() == "/prayer_requests"
+
+    message =
+      find_element(:class, "alert")
+      |> visible_text()
+
+    assert message == "Prayer request shared successfully"
+    refute page_source() =~ "Prayer Request Title 4"
   end
 
   test "show error messages on invalid data" do

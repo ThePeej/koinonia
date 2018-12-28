@@ -5,6 +5,9 @@
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
+
+  <%= hidden_input f, :user_id, value: @current_user.id %>
+
   <div class="form-group">
     <%= label f, :title, class: "control-label" %>
     <%= text_input f, :title, class: "form-control" %>
@@ -15,6 +18,14 @@
     <%= label f, :body, class: "control-label" %>
     <%= textarea f, :body, class: "form-control" %>
     <%= error_tag f, :body%>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :is_public, class: "control-label" do %>
+      Public?
+      <%= checkbox f, :is_public, class: "form-control" %>
+      <%= error_tag f, :is_public%>
+    <% end %>
   </div>
 
   <%= submit "Share Prayer Request", class: "btn btn-primary" %>

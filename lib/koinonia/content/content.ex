@@ -1,11 +1,12 @@
 defmodule Koinonia.Content do
   @moduledoc false
+  import Ecto.Query, only: [from: 2]
   alias Koinonia.Content.PrayerRequest
   alias Koinonia.Repo
 
   def list_prayer_requests do
-    PrayerRequest
-    |> Repo.all()
+    query = from(p in PrayerRequest, where: p.is_public)
+    Repo.all(query)
   end
 
   def build_prayer_request(attrs \\ %{}) do
