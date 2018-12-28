@@ -29,4 +29,15 @@ defmodule Koinonia.Content do
     prayer_request
     |> Repo.preload([:user])
   end
+
+  def get_prayer_requests_by_user(id) do
+    query =
+      from(
+        p in PrayerRequest,
+        where: p.is_public,
+        where: p.user_id == ^id
+      )
+
+    Repo.all(query)
+  end
 end
