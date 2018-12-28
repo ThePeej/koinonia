@@ -4,15 +4,13 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
   hound_session()
 
+  @valid_attrs %{
+    "username" => "BuddyHolly",
+    "email" => "sweater@weezer.com",
+    "password" => "MaryTylerMoore"
+  }
+
   def login do
-    valid_attrs = %{
-      "username" => "BuddyHolly",
-      "email" => "sweater@weezer.com",
-      "password" => "MaryTylerMoore"
-    }
-
-    Koinonia.Account.create_user(valid_attrs)
-
     navigate_to("/login")
 
     form = find_element(:id, "session-form")
@@ -33,30 +31,59 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   test "presence of public prayer requests" do
     alias Koinonia.Content.PrayerRequest
     alias Koinonia.Repo
-    Repo.insert(%PrayerRequest{title: "Prayer Request Title 1", body: "Prayer Request Body 1"})
-    Repo.insert(%PrayerRequest{title: "Prayer Request Title 2", body: "Prayer Request Body 2"})
+    {:ok, user1} = Koinonia.Account.create_user(@valid_attrs)
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 1",
+      body: "Prayer Request Body 1",
+      is_public: false,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 2",
+      body: "Prayer Request Body 2",
+      is_public: true,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 3",
+      body: "Prayer Request Body 3",
+      is_public: false,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 4",
+      body: "Prayer Request Body 4",
+      is_public: true,
+      user_id: user1.id
+    })
+
     navigate_to("/prayer_requests")
 
     page_title = find_element(:css, ".page-title") |> visible_text()
     assert page_title == "Prayer Requests"
 
-    [pr1, pr2] = find_all_elements(:css, ".prayer-request")
+    [pr2, pr4] = find_all_elements(:css, ".prayer-request")
 
-    pr_title =
-      pr1
+    pr2_title =
+      pr2
       |> find_within_element(:css, ".title")
       |> visible_text()
 
-    pr_body =
-      pr2
+    pr4_body =
+      pr4
       |> find_within_element(:css, ".subtitle")
       |> visible_text()
 
-    assert pr_title == "Prayer Request Title 1"
-    assert pr_body == "Prayer Request Body 2"
+    assert pr2_title == "Prayer Request Title 2"
+    assert pr4_body == "Prayer Request Body 4"
   end
 
-  test "submit new prayer request" do
+  test "submit public new prayer request" do
+    Koinonia.Account.create_user(@valid_attrs)
     login()
 
     navigate_to("/prayer_requests/new")
@@ -71,9 +98,16 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
     |> find_within_element(:name, "prayer_request[body]")
     |> fill_field("Prayer Request Body 3")
 
+    form
+    |> find_within_element(:id, "prayer_request_is_public")
+    |> click
+
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_requests"
+    prayer_request =
+      Repo.one(from p in Koinonia.Content.PrayerRequest, order_by: [desc: p.id], limit: 1)
+
+    assert current_path() == "/prayer_requests/#{prayer_request.id}"
 
     message =
       find_element(:class, "alert")
@@ -81,9 +115,34 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     assert message == "Prayer request shared successfully"
     assert page_source() =~ "Prayer Request Title 3"
+    assert page_source() =~ "BuddyHolly"
+  end
+
+  test "non-public prayer request does not show up on index" do
+    Koinonia.Account.create_user(@valid_attrs)
+    login()
+
+    navigate_to("/prayer_requests/new")
+
+    form = find_element(:id, "prayer-request-form")
+
+    form
+    |> find_within_element(:name, "prayer_request[title]")
+    |> fill_field("Prayer Request Title 4")
+
+    form
+    |> find_within_element(:name, "prayer_request[body]")
+    |> fill_field("Prayer Request Body 4")
+
+    form |> find_within_element(:tag, "button") |> click
+
+    navigate_to("/prayer_requests")
+
+    refute page_source() =~ "Prayer Request Title 4"
   end
 
   test "show error messages on invalid data" do
+    Koinonia.Account.create_user(@valid_attrs)
     login()
 
     navigate_to("/prayer_requests/new")

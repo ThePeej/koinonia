@@ -1,6 +1,8 @@
-<div class="prayer-request card">
-  <div class="card-content">
-    <p class="title"><%= @prayer_request.title%></p>
-    <p class="subtitle"><%= @prayer_request.body%></p>
+<a href=<%=Routes.prayer_request_path(@conn, :show, @prayer_request) %>>
+  <div class="prayer-request card">
+    <div class="card-content">
+      <p class="title"><%= @prayer_request.title%></p>
+      <p class="subtitle"><%= @prayer_request.body%></p>
+    </div>
   </div>
-</div>
+</a>

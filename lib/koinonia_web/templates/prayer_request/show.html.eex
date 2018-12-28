@@ -1,0 +1,4 @@
+<h1><%= @prayer_request.title %></h1>
+<h3><%= @prayer_request.body%></h3>
+<strong>Shared by <%= @prayer_request.user.username%></strong>
+<p><%= private_public_text(@prayer_request)%></p>

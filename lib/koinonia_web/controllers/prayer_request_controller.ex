@@ -14,14 +14,23 @@ defmodule KoinoniaWeb.PrayerRequestController do
 
   def create(conn, %{"prayer_request" => prayer_request_params}) do
     case Content.create_prayer_request(prayer_request_params) do
-      {:ok, _prayer_request} ->
+      {:ok, prayer_request} ->
         conn
         |> put_flash(:info, "Prayer request shared successfully")
-        |> redirect(to: Routes.prayer_request_path(conn, :index))
+        |> redirect(to: Routes.prayer_request_path(conn, :show, prayer_request))
 
       {:error, changeset} ->
         conn
         |> render(:new, changeset: changeset)
     end
+  end
+
+  def show(conn, %{"id" => id}) do
+    prayer_request =
+      id
+      |> Content.get_prayer_request()
+      |> Content.load_prayer_request_user()
+
+    render(conn, "show.html", prayer_request: prayer_request)
   end
 end
