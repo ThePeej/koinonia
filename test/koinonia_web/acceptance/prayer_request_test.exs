@@ -104,7 +104,10 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_requests"
+    prayer_request =
+      Repo.one(from p in Koinonia.Content.PrayerRequest, order_by: [desc: p.id], limit: 1)
+
+    assert current_path() == "/prayer_requests/#{prayer_request.id}"
 
     message =
       find_element(:class, "alert")
@@ -112,6 +115,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     assert message == "Prayer request shared successfully"
     assert page_source() =~ "Prayer Request Title 3"
+    assert page_source() =~ "BuddyHolly"
   end
 
   test "non-public prayer request does not show up on index" do
@@ -132,13 +136,8 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
     form |> find_within_element(:tag, "button") |> click
 
-    assert current_path() == "/prayer_requests"
+    navigate_to("/prayer_requests")
 
-    message =
-      find_element(:class, "alert")
-      |> visible_text()
-
-    assert message == "Prayer request shared successfully"
     refute page_source() =~ "Prayer Request Title 4"
   end
 

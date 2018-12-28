@@ -10,7 +10,7 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <%= link "Prayer Requests", to: Routes.prayer_request_path(@conn, :new), class: "button is-text" %>
+      <%= link "Prayer Requests", to: Routes.prayer_request_path(@conn, :index), class: "button is-text" %>
     </div>
 
     <div class="navbar-end">

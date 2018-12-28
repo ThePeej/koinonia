@@ -19,4 +19,14 @@ defmodule Koinonia.Content do
     |> build_prayer_request
     |> Repo.insert()
   end
+
+  def get_prayer_request(id) do
+    PrayerRequest
+    |> Repo.get(id)
+  end
+
+  def load_prayer_request_user(prayer_request) do
+    prayer_request
+    |> Repo.preload([:user])
+  end
 end

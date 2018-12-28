@@ -4,7 +4,7 @@ defmodule Koinonia.ContentTest do
   alias Koinonia.{Account, Content, Repo}
   alias Koinonia.Content.PrayerRequest
 
-  @valid_attrs %{
+  @valid_user_attrs %{
     "username" => "BuddyHolly",
     "email" => "sweater@weezer.com",
     "password" => "MaryTylerMoore"
@@ -14,7 +14,7 @@ defmodule Koinonia.ContentTest do
   end
 
   test "build_prayer_request/1 returns a prayer_request with values applied" do
-    {:ok, user} = Account.create_user(@valid_attrs)
+    {:ok, user} = Account.create_user(@valid_user_attrs)
 
     valid_attrs = %{
       "title" => "PR Title",
@@ -28,7 +28,7 @@ defmodule Koinonia.ContentTest do
   end
 
   test "create_prayer_request/1 returns a prayer_request for valid data" do
-    {:ok, user} = Account.create_user(@valid_attrs)
+    {:ok, user} = Account.create_user(@valid_user_attrs)
 
     valid_attrs = %{
       "title" => "PR Title",
@@ -46,7 +46,7 @@ defmodule Koinonia.ContentTest do
   end
 
   test "list_prayer_requests/0 returns all public prayers" do
-    {:ok, user} = Account.create_user(@valid_attrs)
+    {:ok, user} = Account.create_user(@valid_user_attrs)
 
     Repo.insert(%PrayerRequest{
       title: "Prayer Request 1 Title",
@@ -69,5 +69,20 @@ defmodule Koinonia.ContentTest do
   end
 
   test "list_user_prayer_requests/1 returns all public prayers of given user" do
+  end
+
+  test "get_prayer_request/1" do
+    {:ok, user} = Account.create_user(@valid_user_attrs)
+
+    valid_attrs = %{
+      "title" => "PR Title",
+      "body" => "PR Body",
+      "is_public" => true,
+      "user_id" => user.id
+    }
+
+    {:ok, prayer_request} = Content.create_prayer_request(valid_attrs)
+
+    assert prayer_request == Content.get_prayer_request(prayer_request.id)
   end
 end
