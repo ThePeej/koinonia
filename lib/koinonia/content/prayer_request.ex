@@ -6,6 +6,8 @@ defmodule Koinonia.Content.PrayerRequest do
   schema "prayer_requests" do
     field :title, :string
     field :body, :string
+    field :is_private, :boolean
+    belongs_to :user, Koinonia.Account.User
 
     timestamps()
   end
@@ -13,7 +15,7 @@ defmodule Koinonia.Content.PrayerRequest do
   @doc false
   def changeset(prayer_request, attrs) do
     prayer_request
-    |> cast(attrs, [:title, :body])
-    |> validate_required([:title, :body])
+    |> cast(attrs, [:title, :body, :is_private, :user_id])
+    |> validate_required([:title, :body, :is_private, :user_id])
   end
 end

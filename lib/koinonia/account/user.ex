@@ -9,6 +9,7 @@ defmodule Koinonia.Account.User do
     field :email, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    has_many :prayer_requests, Koinonia.Content.PrayerRequest
 
     timestamps()
   end

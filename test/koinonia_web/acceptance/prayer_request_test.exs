@@ -4,15 +4,13 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
 
   hound_session()
 
+  @valid_attrs %{
+    "username" => "BuddyHolly",
+    "email" => "sweater@weezer.com",
+    "password" => "MaryTylerMoore"
+  }
+
   def login do
-    valid_attrs = %{
-      "username" => "BuddyHolly",
-      "email" => "sweater@weezer.com",
-      "password" => "MaryTylerMoore"
-    }
-
-    Koinonia.Account.create_user(valid_attrs)
-
     navigate_to("/login")
 
     form = find_element(:id, "session-form")
@@ -33,30 +31,59 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   test "presence of public prayer requests" do
     alias Koinonia.Content.PrayerRequest
     alias Koinonia.Repo
-    Repo.insert(%PrayerRequest{title: "Prayer Request Title 1", body: "Prayer Request Body 1"})
-    Repo.insert(%PrayerRequest{title: "Prayer Request Title 2", body: "Prayer Request Body 2"})
+    {:ok, user1} = Koinonia.Account.create_user(@valid_attrs)
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 1",
+      body: "Prayer Request Body 1",
+      is_private: false,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 2",
+      body: "Prayer Request Body 2",
+      is_private: true,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 3",
+      body: "Prayer Request Body 3",
+      is_private: false,
+      user_id: user1.id
+    })
+
+    Repo.insert(%PrayerRequest{
+      title: "Prayer Request Title 4",
+      body: "Prayer Request Body 4",
+      is_private: true,
+      user_id: user1.id
+    })
+
     navigate_to("/prayer_requests")
 
     page_title = find_element(:css, ".page-title") |> visible_text()
     assert page_title == "Prayer Requests"
 
-    [pr1, pr2] = find_all_elements(:css, ".prayer-request")
+    [pr1, pr3] = find_all_elements(:css, ".prayer-request")
 
-    pr_title =
+    pr1_title =
       pr1
       |> find_within_element(:css, ".title")
       |> visible_text()
 
-    pr_body =
-      pr2
+    pr3_body =
+      pr3
       |> find_within_element(:css, ".subtitle")
       |> visible_text()
 
-    assert pr_title == "Prayer Request Title 1"
-    assert pr_body == "Prayer Request Body 2"
+    assert pr1_title == "Prayer Request Title 1"
+    assert pr3_body == "Prayer Request Body 3"
   end
 
   test "submit new prayer request" do
+    Koinonia.Account.create_user(@valid_attrs)
     login()
 
     navigate_to("/prayer_requests/new")
@@ -84,6 +111,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
   end
 
   test "show error messages on invalid data" do
+    Koinonia.Account.create_user(@valid_attrs)
     login()
 
     navigate_to("/prayer_requests/new")
