@@ -52,6 +52,13 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     form = find_element(:id, "prayer-request-form")
 
+    existing_title =
+      form
+      |> find_within_element(:name, "prayer_request[title]")
+      |> attribute_value("value")
+
+    assert existing_title == "Prayer Request Title 1"
+
     form
     |> find_within_element(:name, "prayer_request[title]")
     |> fill_field("Edited Prayer Request Title 1")
