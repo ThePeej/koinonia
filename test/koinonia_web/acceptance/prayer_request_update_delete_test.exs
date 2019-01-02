@@ -133,14 +133,13 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert current_path() == "/prayer_requests"
-
     message =
       find_element(:class, "alert")
       |> visible_text()
 
     assert message == "Prayer request deleted successfully"
     refute page_source() =~ "Prayer Request Title 1"
+    assert current_path() == "/prayer_requests"
   end
 
   test "user cannot delete another user's prayer request" do
@@ -166,13 +165,12 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert current_path() == "/prayer_requests"
-
     message =
       find_element(:class, "alert-danger")
       |> visible_text()
 
     assert message == "You can only update and/or delete your own prayer requests"
     assert page_source() =~ "Prayer Request Title 2"
+    assert current_path() == "/prayer_requests"
   end
 end
