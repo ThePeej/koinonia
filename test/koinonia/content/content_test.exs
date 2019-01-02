@@ -131,4 +131,77 @@ defmodule Koinonia.ContentTest do
 
     assert pr2.title == "Prayer Request 2 Title"
   end
+
+  test "change_prayer_request/1 returns a prayer_request changeset" do
+    valid_user_attrs1 = %{
+      "username" => "BuddyHolly",
+      "email" => "sweater@weezer.com",
+      "password" => "MaryTylerMoore"
+    }
+
+    {:ok, user1} = Account.create_user(valid_user_attrs1)
+
+    {:ok, prayer_request} =
+      Repo.insert(%PrayerRequest{
+        title: "Prayer Request 1 Title",
+        body: "Prayer Request 1 Body",
+        is_public: false,
+        user_id: user1.id
+      })
+
+    assert %Ecto.Changeset{} = Content.change_prayer_request(prayer_request)
+  end
+
+  test "update_prayer_request/1 with valid data updates the prayer request" do
+    valid_user_attrs1 = %{
+      "username" => "BuddyHolly",
+      "email" => "sweater@weezer.com",
+      "password" => "MaryTylerMoore"
+    }
+
+    {:ok, user1} = Account.create_user(valid_user_attrs1)
+
+    {:ok, prayer_request} =
+      Repo.insert(%PrayerRequest{
+        title: "Prayer Request 1 Title",
+        body: "Prayer Request 1 Body",
+        is_public: false,
+        user_id: user1.id
+      })
+
+    updated_attrs = %{
+      title: "Edited Prayer Request 1 Title",
+      body: "Edited Prayer Request 1 Body",
+      is_public: true,
+      user_id: user1.id
+    }
+
+    assert {:ok, %PrayerRequest{} = prayer_request} =
+             Content.update_prayer_request(prayer_request, updated_attrs)
+
+    assert prayer_request.title == "Edited Prayer Request 1 Title"
+    assert prayer_request.body == "Edited Prayer Request 1 Body"
+    assert prayer_request.is_public
+  end
+
+  test "delete_prayer_request/1 deletes the prayer request" do
+    valid_user_attrs1 = %{
+      "username" => "BuddyHolly",
+      "email" => "sweater@weezer.com",
+      "password" => "MaryTylerMoore"
+    }
+
+    {:ok, user1} = Account.create_user(valid_user_attrs1)
+
+    {:ok, prayer_request} =
+      Repo.insert(%PrayerRequest{
+        title: "Prayer Request 1 Title",
+        body: "Prayer Request 1 Body",
+        is_public: false,
+        user_id: user1.id
+      })
+
+    assert {:ok, %PrayerRequest{}} = Content.delete_prayer_request(prayer_request)
+    assert Content.get_prayer_request(prayer_request.id) == nil
+  end
 end

@@ -53,4 +53,14 @@ defmodule KoinoniaWeb.PrayerRequestController do
         render(conn, "edit.html", prayer_request: prayer_request, changeset: changeset)
     end
   end
+
+  def delete(conn, %{"id" => id}) do
+    prayer_request = Content.get_prayer_request(id)
+
+    {:ok, _prayer_request} = Content.delete_prayer_request(prayer_request)
+
+    conn
+    |> put_flash(:info, "Prayer request deleted successfully")
+    |> redirect(to: Routes.prayer_request_path(conn, :index))
+  end
 end

@@ -2,3 +2,5 @@
 <h3><%= @prayer_request.body%></h3>
 <strong>Shared by <%= @prayer_request.user.username%></strong>
 <p><%= private_public_text(@prayer_request)%></p>
+<%= link("Edit", to: Routes.prayer_request_path(@conn, :edit, @prayer_request), id: "edit-prayer-request", class: "button is-light is-small") %>
+<%= link("Delete", to: Routes.prayer_request_path(@conn, :delete, @prayer_request), method: :delete, id: "delete-prayer-request", class: "button is-danger is-small") %>

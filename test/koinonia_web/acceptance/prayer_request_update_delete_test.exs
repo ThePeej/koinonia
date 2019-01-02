@@ -129,7 +129,9 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     assert page_source() =~ "Prayer Request Title 1"
 
-    navigate_to("/prayer_requests/#{pr1.id}/delete")
+    navigate_to("/prayer_requests/#{pr1.id}")
+
+    find_element(:id, "delete-prayer-request") |> click()
 
     assert current_path() == "/prayer_requests"
 

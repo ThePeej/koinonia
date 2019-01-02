@@ -30,6 +30,10 @@ defmodule Koinonia.Content do
     |> Repo.update()
   end
 
+  def delete_prayer_request(%PrayerRequest{} = prayer_request) do
+    Repo.delete(prayer_request)
+  end
+
   def get_prayer_request(id) do
     PrayerRequest
     |> Repo.get(id)
