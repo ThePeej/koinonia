@@ -1,4 +1,4 @@
-defmodule KoinoniaWeb.Acceptance.PrayerRequestTest do
+defmodule KoinoniaWeb.Acceptance.PrayerRequestCreateReadTest do
   use Koinonia.DataCase
   use Hound.Helpers
 
