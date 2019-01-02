@@ -2,6 +2,8 @@ defmodule KoinoniaWeb.PrayerRequestController do
   use KoinoniaWeb, :controller
   alias Koinonia.Content
 
+  plug :authorize_user when action in [:edit, :update, :delete]
+
   def index(conn, _params) do
     prayer_requests = Content.list_prayer_requests()
     render(conn, "index.html", prayer_requests: prayer_requests)
@@ -62,5 +64,19 @@ defmodule KoinoniaWeb.PrayerRequestController do
     conn
     |> put_flash(:info, "Prayer request deleted successfully")
     |> redirect(to: Routes.prayer_request_path(conn, :index))
+  end
+
+  defp authorize_user(conn, _params) do
+    %{params: %{"id" => prayer_request_id}} = conn
+    prayer_request = Content.get_prayer_request(prayer_request_id)
+
+    if conn.assigns.current_user.id == prayer_request.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You can only update and/or delete your own prayer requests")
+      |> redirect(to: Routes.prayer_request_path(conn, :index))
+      |> halt()
+    end
   end
 end
