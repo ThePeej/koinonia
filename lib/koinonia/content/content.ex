@@ -20,6 +20,16 @@ defmodule Koinonia.Content do
     |> Repo.insert()
   end
 
+  def change_prayer_request(%PrayerRequest{} = prayer_request) do
+    PrayerRequest.changeset(prayer_request, %{})
+  end
+
+  def update_prayer_request(%PrayerRequest{} = prayer_request, attrs) do
+    prayer_request
+    |> PrayerRequest.changeset(attrs)
+    |> Repo.update()
+  end
+
   def get_prayer_request(id) do
     PrayerRequest
     |> Repo.get(id)

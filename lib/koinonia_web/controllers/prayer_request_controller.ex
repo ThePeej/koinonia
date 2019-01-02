@@ -33,4 +33,24 @@ defmodule KoinoniaWeb.PrayerRequestController do
 
     render(conn, "show.html", prayer_request: prayer_request)
   end
+
+  def edit(conn, %{"id" => id}) do
+    prayer_request = Content.get_prayer_request(id)
+    changeset = Content.change_prayer_request(prayer_request)
+    render(conn, "edit.html", changeset: changeset, prayer_request: prayer_request)
+  end
+
+  def update(conn, %{"id" => id, "prayer_request" => prayer_request_params}) do
+    prayer_request = Content.get_prayer_request(id)
+
+    case Content.update_prayer_request(prayer_request, prayer_request_params) do
+      {:ok, prayer_request} ->
+        conn
+        |> put_flash(:info, "Prayer request updated successfully")
+        |> redirect(to: Routes.prayer_request_path(conn, :show, prayer_request))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "edit.html", prayer_request: prayer_request, changeset: changeset)
+    end
+  end
 end
