@@ -16,7 +16,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
     "password" => "Snoopy"
   }
 
-  def login do
+  defp login do
     navigate_to("/login")
 
     form = find_element(:id, "session-form")
@@ -32,6 +32,17 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
     form
     |> find_within_element(:tag, "button")
     |> click()
+  end
+
+  defp page_reload?(page_path, retries \\ 5) do
+    case current_path() == page_path do
+      true ->
+        true
+
+      false ->
+        :timer.sleep(10)
+        page_reload?(page_path, retries - 1)
+    end
   end
 
   test "user can edit their prayer request" do
@@ -133,13 +144,14 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
+    assert page_reload?("/prayer_requests")
+
     message =
       find_element(:class, "alert")
       |> visible_text()
 
     assert message == "Prayer request deleted successfully"
     refute page_source() =~ "Prayer Request Title 1"
-    assert current_path() == "/prayer_requests"
   end
 
   test "user cannot delete another user's prayer request" do
@@ -165,12 +177,13 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
+    assert page_reload?("/prayer_requests")
+
     message =
       find_element(:class, "alert-danger")
       |> visible_text()
 
     assert message == "You can only update and/or delete your own prayer requests"
     assert page_source() =~ "Prayer Request Title 2"
-    assert current_path() == "/prayer_requests"
   end
 end
