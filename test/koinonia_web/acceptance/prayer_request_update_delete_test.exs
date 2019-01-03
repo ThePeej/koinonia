@@ -34,23 +34,6 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
     |> click()
   end
 
-  defp page_reload?(page_path, retries \\ 5)
-
-  defp page_reload?(page_path, 0) do
-    page_reload?(page_path)
-  end
-
-  defp page_reload?(page_path, retries) do
-    case current_path() == page_path do
-      true ->
-        true
-
-      false ->
-        :timer.sleep(10)
-        page_reload?(page_path, retries - 1)
-    end
-  end
-
   test "user can edit their prayer request" do
     alias Koinonia.Content
     {:ok, user1} = Koinonia.Account.create_user(@valid_attrs1)
@@ -150,7 +133,9 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert page_reload?("/prayer_requests", 10)
+    :timer.sleep(1000)
+
+    assert current_path() == "/prayer_requests"
 
     message =
       find_element(:class, "alert")
@@ -183,7 +168,9 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert page_reload?("/prayer_requests", 10)
+    :timer.sleep(1000)
+
+    assert current_path() == "/prayer_requests"
 
     message =
       find_element(:class, "alert-danger")
