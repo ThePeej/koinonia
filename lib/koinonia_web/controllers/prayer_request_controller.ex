@@ -58,7 +58,6 @@ defmodule KoinoniaWeb.PrayerRequestController do
 
   def delete(conn, %{"id" => id}) do
     prayer_request = Content.get_prayer_request(id)
-
     {:ok, _prayer_request} = Content.delete_prayer_request(prayer_request)
 
     conn

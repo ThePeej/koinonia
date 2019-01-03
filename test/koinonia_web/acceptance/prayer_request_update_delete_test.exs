@@ -133,8 +133,6 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    :timer.sleep(1000)
-
     assert current_path() == "/prayer_requests"
 
     message =
@@ -167,8 +165,6 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
     navigate_to("/prayer_requests/#{pr2.id}")
 
     find_element(:id, "delete-prayer-request") |> click()
-
-    :timer.sleep(1000)
 
     assert current_path() == "/prayer_requests"
 
