@@ -150,7 +150,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert page_reload?("/prayer_requests", ~r/10/)
+    assert page_reload?("/prayer_requests", 10)
 
     message =
       find_element(:class, "alert")
@@ -183,7 +183,7 @@ defmodule KoinoniaWeb.Acceptance.PrayerRequestUpdateDeleteTest do
 
     find_element(:id, "delete-prayer-request") |> click()
 
-    assert page_reload?("/prayer_requests", ~r/10/)
+    assert page_reload?("/prayer_requests", 10)
 
     message =
       find_element(:class, "alert-danger")
